@@ -24,10 +24,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors(x => x
-              .AllowAnyMethod()
-              .AllowAnyHeader()
-              .SetIsOriginAllowed(origin => true)); // allow any origin
+app.UseCors(
+      options => options.WithOrigins("https://localhost:7131").AllowAnyMethod().AllowAnyHeader()
+  );
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

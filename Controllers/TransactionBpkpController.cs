@@ -31,11 +31,11 @@ namespace Backend.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync(Transaction_bpkb data)
+        public async Task<IActionResult> PostAsync([FromBody] Transaction_bpkb transaction_bpkb)
         {
-            _myWorldDbContext.transaction_bpkb.Add(data);
+            _myWorldDbContext.transaction_bpkb.Add(transaction_bpkb);
             await _myWorldDbContext.SaveChangesAsync();
-            return Created($"/gget-transcation-by-id?id={data.agreement_number}", data);
+            return Created($"/gget-transcation-by-id?id={transaction_bpkb.agreement_number}", transaction_bpkb);
         }
 
     }
