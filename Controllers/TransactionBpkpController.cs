@@ -1,42 +1,58 @@
 ﻿using Backend.Data;
 using Backend.Data.Entities;
+using Backend.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class TransactionBpkpController : Controller
     {
-        private readonly MyWorldDbContext _myWorldDbContext;
-        public TransactionBpkpController(MyWorldDbContext myWorldDbContext)
+        private readonly ITransactionBpkbRepository _repo;
+        public TransactionBpkpController(ITransactionBpkbRepository repo)
         {
-            _myWorldDbContext = myWorldDbContext;
+            this._repo = repo;
         }
 
+        // GET: api/[controller]
         [HttpGet]
-        public async Task<IActionResult> GetAsync()
+        public ActionResult<IEnumerable<Transaction_bpkb>> GetValues()
         {
-            var data = await _myWorldDbContext.transaction_bpkb.ToListAsync();
-            return Ok(data);
+            try
+            {
+                var data = _repo.Get();
+                return Ok(data);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
         }
 
-        [HttpGet]
+        /*[HttpGet]
         [Route("get-transcation-by-id")]
         public async Task<IActionResult> GetTrBpkbByIdAsync(int id)
         {
             var cake = await _myWorldDbContext.transaction_bpkb.FindAsync(id);
             return Ok(cake);
-        }
+        }*/
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] Transaction_bpkb transaction_bpkb)
+        public async Task<IActionResult> Post(Transaction_bpkb transaction_Bpkb)
         {
-            _myWorldDbContext.transaction_bpkb.Add(transaction_bpkb);
-            await _myWorldDbContext.SaveChangesAsync();
-            return Created($"/gget-transcation-by-id?id={transaction_bpkb.agreement_number}", transaction_bpkb);
-        }
+            try
+            {
+                await _repo.Post(transaction_Bpkb);
+                return Ok("ok");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
 
+            }
+
+        }
     }
 }
